@@ -6,7 +6,9 @@ from model import User
 # from model import Movie
 
 from model import connect_to_db, db
+from datetime import datetime
 from server import app
+import re
 
 
 def load_users():
@@ -49,7 +51,13 @@ def load_movies():
         row = row.split("|")
         movie_id = row[0] 
         title = row[1]
-        released_at  = row[2]
+        title = re.sub(r'\W\([0-9]{4}\)', '', title)
+        released_str  = row[2]
+        if released_str:
+            released_at = datetime.datetime.strptime(released_str, "%d-%b-%Y")
+        else:
+            released_at = None
+
         imdb_url = row[3]
 
         movie = Movie(movie_id=movie_id,
@@ -75,14 +83,15 @@ def load_ratings():
     # Read u.user file and insert data
     for row in open("seed_data/u.data"):
         row = row.rstrip()
-        user_id, age, gender, occupation, zipcode = row.split("|")
+        user_id, movie_id, score, timestamp = row.split("/t")
 
-        user = User(user_id=user_id,
-                    age=age,
-                    zipcode=zipcode)
+        rating = Rating(user_id=user_id,
+                    movie_id=movie_id,
+                    score=score,
+                    timestamp=timestamp)
 
         # We need to add to the session or it won't ever be stored
-        db.session.add(movie)
+        db.session.add(rating)
 
     # Once we're done, we should commit our work
     db.session.commit()
