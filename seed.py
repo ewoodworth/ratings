@@ -2,8 +2,8 @@
 
 from sqlalchemy import func
 from model import User
-# from model import Rating
-# from model import Movie
+from model import Rating
+from model import Movie
 
 from model import connect_to_db, db
 from datetime import datetime
@@ -54,11 +54,11 @@ def load_movies():
         title = re.sub(r'\W\([0-9]{4}\)', '', title)
         released_str  = row[2]
         if released_str:
-            released_at = datetime.datetime.strptime(released_str, "%d-%b-%Y")
+            released_at = datetime.strptime(released_str, "%d-%b-%Y")
         else:
             released_at = None
 
-        imdb_url = row[3]
+        imdb_url = row[4]
 
         movie = Movie(movie_id=movie_id,
                     title=title, 
@@ -83,12 +83,15 @@ def load_ratings():
     # Read u.user file and insert data
     for row in open("seed_data/u.data"):
         row = row.rstrip()
-        user_id, movie_id, score, timestamp = row.split("/t")
+        row = row.split("\t")
+        user_id = row[0]
+        movie_id = row[1]
+        score = row[2]
 
         rating = Rating(user_id=user_id,
                     movie_id=movie_id,
                     score=score,
-                    timestamp=timestamp)
+                    )
 
         # We need to add to the session or it won't ever be stored
         db.session.add(rating)

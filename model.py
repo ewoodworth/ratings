@@ -40,17 +40,42 @@ class Movie(db.Model):
     movie_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     title = db.Column(db.String(255), nullable=False)
     released_at = db.Column(db.DateTime, nullable=True)
-    imbd_url = db.Column(db.String(500), nullable=True)
+    imdb_url = db.Column(db.String(500), nullable=True)
+
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return "<Movie movie_id=%s title=%s>" % (self.movie_id,
+                                               self.title)
 
 class Rating(db.Model):
-    """Rating of ratings website."""
+    """Rating of a movie by a user."""
 
     __tablename__ = "ratings"
 
-    rating_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    movie_id = db.Column(db.Integer, nullable=False)
-    user_id = db.Column(db.Integer, nullable=False)
-    score = db.Column(db.Integer, nullable=False)
+    rating_id = db.Column(db.Integer,
+                          autoincrement=True,
+                          primary_key=True)
+    movie_id = db.Column(db.Integer,
+                         db.ForeignKey('movies.movie_id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+    score = db.Column(db.Integer)
+
+    # Define relationship to user
+    user = db.relationship("User",
+                           backref=db.backref("ratings",
+                                              order_by=rating_id))
+
+    # Define relationship to movie
+    movie = db.relationship("Movie",
+                            backref=db.backref("ratings",
+                                               order_by=rating_id))
+
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return "<Rating movie_id=%s user_id=%s score=%s>" % (self.movie_id,
+                                               self.user_id, self.score)
 ##############################################################################
 # Helper functions
 
@@ -61,6 +86,7 @@ def connect_to_db(app):
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///ratings'
     db.app = app
     db.init_app(app)
+    app.config['SQLALCHEMY_ECHO'] = True
 
 
 if __name__ == "__main__":
