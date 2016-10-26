@@ -24,27 +24,45 @@ app.jinja_env.undefined = StrictUndefined
 def index():
     """Homepage."""
     # a = jsonify([1,3])
-
+    #SETUP SESSION W?USER KEY NULL START< FILL UPON ESTABLISHMENT
+    # current_user = session.get(current_user:{username:, }, 0)
+    
     return render_template("homepage.html")
 
+# @app.route('/dbcheck', methods=['POST'])
+# def dbcheck():
+#     """Check password against databse"""
+#     potential_input = request.form.get("username")
+#     potential = User.query.filter_by(username=potential_input).first()
+#     if potential
+#         return True  ##JSONIIFY RESULT FOR JS METABOLISM
+
 @app.route('/signup_catch', methods=['POST'])
+def signup_catch():
     """Collect results from signup form"""
-    # Setup rules for usernames
-    # Setup rules for password
-    #Constrain age to numbers less than 200
-    #Constrain zipcode to [0-9]{5}
-    username = request.form,get("username")
-    if username != 
-    password = request.form,get("password")
-    age = request.form,get("age")
-    zipcode = request.form,get("zipcode")
+    potential_input = request.form.get("username")
+    potential = User.query.filter_by(username=potential_input).first()
+    if potential:
+        flash("Username already taken! Please try again!")
+    else:
+        username = request.form.get("username")
+        password = request.form.get("password")
+        age = request.form.get("age")
+        zipcode = request.form.get("zipcode")
+        user = User(user_id=user_id, username=username, password=password, age=age, zipcode=zipcode)
+        db.session.add(user)
+        db.session.commit()
+
+
+
     return redirect('/')
 
+
 @app.route('/login_catch', methods=['POST'])
-    """Collect results from login form"""
+    # """Collect results from login form"""
     #check database for user id #On failure: FLASH 
     #Check matching password #On failure FLASH
-    return redirect('/')
+    # return redirect('/')
 
 @app.route("/users")
 def user_list():
