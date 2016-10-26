@@ -5,6 +5,11 @@
 </head>
 
 <body>
+<ul>
+    {% for message in get_flashed_messages() %}
+    <li> {{ message }}
+    </li>
+</ul>
   Ratings
   <hr>
 

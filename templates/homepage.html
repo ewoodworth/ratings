@@ -1,6 +1,27 @@
 {% extends 'base.html' %}
 {% block content %}
 
+<h3>Log In:</h3>
+<form method="POST">
+    <input class="login" type="text" name="username" value="username">
+    <input class="login" type="text" name="password" value="password">
+    <input type="submit" name="Log In">
+</form>
+<br>
+<h1>Sign Up:</h1>
+<form method="POST">
+    <input class="signup" type="text" name="username" value="username">
+    <br>
+    <input class="signup" type="text" name="password" value="password">
+    <br>
+    <input class="signup" type="text" name="age" value="age">
+    <br>
+    <input class="signup" type="text" name="zipcode" value="ZIP">
+    <br>
+    <input class="signup" type="submit" name="Sign Up">
+    <br>
+</form>
+<br>
 <h1>Ratings</h1>
 
 <h2>Movies</h2>
