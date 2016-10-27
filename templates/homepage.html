@@ -1,5 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
+<h3 id='logout'>
+<form action='/logout_catch' method='POST'>
+    <input type='submit' name='logout' value='Logout'>
+</form>
+</h3>
 <h1>Ratings</h1>
 
 <h2>Movies</h2>

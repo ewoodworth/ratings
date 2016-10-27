@@ -24,15 +24,14 @@ app.jinja_env.auto_reload = True
 @app.route('/')
 def index():
     """Homepage."""
-    # a = jsonify([1,3])
-    #SETUP SESSION W?USER KEY NULL START< FILL UPON ESTABLISHMENT
-    # current_user = session.get(current_user:{username:, }, 0)
     if 'current_user' in session:
         #How to render a page if they are already signed inde
+        flash('You are signed up and logged in!')
         return render_template('homepage.html')
     else:
         # current_user = session['current_user'] = {} 
         #how to render a page for login/signin
+        flash('You are logged out! Please log in below!')
         return render_template('signup.html')
 
 
@@ -67,27 +66,41 @@ def signup_catch():
 
 
 @app.route('/login_catch', methods=['POST'])
-    # """Collect results from login form"""
-    #check database for user id #On failure: FLASH 
-    #Check matching password #On failure FLASH
+def login_catch():
+    """Collect results from login form"""
     username = request.form.get("username")
     password = request.form.get("password")
     check_username = User.query.filter_by(username=username).first()
     check_password = User.query.filter_by(password=password).first()
-    if check_username AND check_password:
-        return render_template('homepage.html')
+    session['current_user'] = {'username':username}
+    if check_username and check_password:
+        return redirect('/')
     else:
         flash('Your username and password were not recognized')
-        return render_template('signup.html')
-    # return redirect('/')
+        return redirect('/')
+
+@app.route('/logout_catch', methods=['POST'])
+def logout_catch():
+    """Log user out, redirect home"""
+    session.clear()
+    return redirect('/')
 
 @app.route("/users")
 def user_list():
     """Show list of users."""
-
     users = User.query.all()
-    return render_template("user_list.html", users=users)
+    return render_template("user_list.html", users=users, user_id=users.user_id)
 
+@app.route("/users/{{ user_id }}")
+def user_page(user_id):
+    """Show user page """
+    user = User.query.filter_by(username=username)
+    age = user.age
+    zipcode = user.zipcode
+    ratings=
+#User age
+#user ZIP
+#LIST OF RATED MOVIES (from that user)
 
 
 
