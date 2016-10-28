@@ -1,6 +1,22 @@
 {% extends 'base.html' %}
 {% block content %}
-#User age
-#user ZIP
-#LIST OF RATED MOVIES (from that user)
+  {{ user.user_id }})
+  <br>
+  {% if user.username != None %}
+  Username: {{ user.username }}
+  <br>
+  {% endif %}
+  Age: {{ user.age }}
+  <br>
+  Zipcode: {{ user.zipcode }}
+
+  Your ratings:
+  {% for rating in user.ratings%}
+
+    <ul> {{ rating.movie.title }}
+      <li>Movie Id: {{ rating.movie_id }}
+        <br>Score: {{ rating.score }}</li>
+    </ul>
+  {% endfor %}
+  
 {% endblock %}

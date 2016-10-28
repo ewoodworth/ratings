@@ -74,7 +74,7 @@ def login_catch():
     check_password = User.query.filter_by(password=password).first()
     session['current_user'] = {'username':username}
     if check_username and check_password:
-        return redirect('/')
+        return redirect('/users/<user_id>')
     else:
         flash('Your username and password were not recognized')
         return redirect('/')
@@ -85,23 +85,38 @@ def logout_catch():
     session.clear()
     return redirect('/')
 
+@app.route('/ratings_catch', methods=['POST'])
+def ratings_catch():
+    """Add a user rating to a movie"""
+    rating = request.form.get("score")
+    db.session.add(rating)
+    db.session.commit
+
+@app.route('/movies')
+def movie_list():
+    """Show list of movies"""
+    movies = Movie.query.all()
+    return render_template("movies.html", movies=movies)
+
+@app.route("/movies/<movie_id>")
+def movie_page(movie_id):
+    """Show user page """
+    movie = Movie.query.filter_by(movie_id=movie_id).first()
+    return render_template("movie.html", movie=movie)
+
+
 @app.route("/users")
 def user_list():
     """Show list of users."""
     users = User.query.all()
-    return render_template("user_list.html", users=users, user_id=users.user_id)
+    # user_id = users.user_id
+    return render_template("user_list.html", users=users)
 
-@app.route("/users/{{ user_id }}")
+@app.route("/users/<user_id>")
 def user_page(user_id):
     """Show user page """
-    user = User.query.filter_by(username=username)
-    age = user.age
-    zipcode = user.zipcode
-    ratings=
-#User age
-#user ZIP
-#LIST OF RATED MOVIES (from that user)
-
+    user = User.query.filter_by(user_id=user_id).first()
+    return render_template("user_page.html", user=user)
 
 
 if __name__ == "__main__":
@@ -117,3 +132,7 @@ if __name__ == "__main__":
 
     
     app.run(port=5003)
+
+
+
+
